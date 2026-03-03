@@ -11,8 +11,9 @@ namespace MessageBusReader.Extensions;
 public record MessageType(string Value)
 {
     public static MessageType Unknown => new("unknown");
-
+    public override string ToString() => Value;
 }
+
 internal static class ProcessMessageEventArgsExtensions
 {
     internal static MessageType? GetMessageType(this ProcessMessageEventArgs messageEvent)
@@ -93,7 +94,7 @@ internal static class ProcessMessageEventArgsExtensions
 
         OperationLogger.MessageCompleted();
     }
-    
+
     internal static string Deserialize(this ProcessMessageEventArgs message)
     {
         return Encoding.UTF8.GetString(message.Message.Body);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using MessageBusReader.Configuration;
@@ -15,6 +16,7 @@ internal static class ExecutionInitiator
     {
         var client = ServiceBusClientProvider.GetClient();
 
+        Console.WriteLine("Building message processor");
         var messageProcessor = new MessageProcessor(inputs);
 
         var options = new ServiceBusProcessorOptions
@@ -25,8 +27,10 @@ internal static class ExecutionInitiator
             SubQueue = inputs.SourceQueue.SubQueue
         };
 
+        Console.WriteLine("Creating processor");
         var processor = client.CreateProcessor(inputs.SourceQueue.Name.Name, options);
 
+        Console.WriteLine("Registering processor callbacks");
         processor.ProcessMessageAsync += messageProcessor.ProcessMessagesAsync;
         processor.ProcessErrorAsync += messageProcessor.ExceptionReceivedHandler;
 
@@ -35,7 +39,17 @@ internal static class ExecutionInitiator
 
         await processor.StartProcessingAsync();
 
+        Console.WriteLine("Processor finished");
         await _loopTask;
+
+        Console.WriteLine("Executing callbacks");
+        foreach (var executionStep in inputs.ExecutionSteps)
+        {
+            if (executionStep.ExecutionFinishedCallback != null)
+            {
+                await executionStep.ExecutionFinishedCallback();
+            }
+        }
 
         Console.WriteLine("Execution finished");
 
