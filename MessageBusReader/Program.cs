@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 internal static class Program
 {
-    static async Task Main(string[] args)
+    static async Task Main()
     {
         // Build inputs
         var sourceQueue = new SourceQueue(ErrorQueueName.Ballot.GetQueueName(), SubQueue.None);
@@ -22,8 +22,7 @@ internal static class Program
                 PrebuildExecutionSteps.ReturnAllFromDeadLetterQueue(sourceQueue)
             ]
         };
-
-
+        
         // Start Execution
         await ExecutionInitiator.Start(executionSteps);
     }

@@ -20,7 +20,7 @@ internal static class ProcessMessageEventArgsExtensions
         return null;
     }
 
-    internal static bool IsMessageOfType(this ProcessMessageEventArgs messageEvent, params string[] targetMessageTypes)
+    internal static bool IsOfType(this ProcessMessageEventArgs messageEvent, params string[] targetMessageTypes)
     {
         if (messageEvent.GetMessageType() is { } actualMessageType)
         {
