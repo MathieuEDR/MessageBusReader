@@ -14,12 +14,12 @@ internal static class Program
     {
         // Build inputs
         var sourceQueue = new SourceQueue(ErrorQueueName.Ballot.GetQueueName(), SubQueue.None);
-        var executionSteps = new ExecutionInputConfiguration()
+        var executionSteps = new ExecutionInputConfiguration
         {
             SourceQueue = sourceQueue,
             ExecutionSteps =
             [
-                PrebuildExecutionSteps.ReturnAllFromDeadLetterQueue(sourceQueue)
+                PrebuildExecutionSteps.Analysis.AnalyzeMessagesByType()
             ]
         };
         

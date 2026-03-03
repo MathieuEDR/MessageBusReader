@@ -8,13 +8,21 @@ using MessageBusReader.Services;
 
 namespace MessageBusReader.Extensions;
 
+public record MessageType(string Value)
+{
+    public static MessageType Unknown => new("unknown");
+
+}
 internal static class ProcessMessageEventArgsExtensions
 {
-    internal static string? GetMessageType(this ProcessMessageEventArgs messageEvent)
+    internal static MessageType? GetMessageType(this ProcessMessageEventArgs messageEvent)
     {
-        if (messageEvent.Message.ApplicationProperties.TryGetValue("rbs2-msg-type", out var value))
+        if (messageEvent.Message.ApplicationProperties.TryGetValue("rbs2-msg-type", out var rawValue))
         {
-            return value?.ToString();
+            if (rawValue?.ToString() is { } sanitizedValue)
+            {
+                return new MessageType(sanitizedValue);
+            }
         }
 
         return null;
@@ -24,7 +32,7 @@ internal static class ProcessMessageEventArgsExtensions
     {
         if (messageEvent.GetMessageType() is { } actualMessageType)
         {
-            return targetMessageTypes.Any(targetMessageType => actualMessageType == targetMessageType);
+            return targetMessageTypes.Any(targetMessageType => actualMessageType.Value == targetMessageType);
         }
 
         return false;

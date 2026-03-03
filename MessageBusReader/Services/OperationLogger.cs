@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using MessageBusReader.DataTypes;
+using MessageBusReader.Extensions;
 
 namespace MessageBusReader.Services;
 
@@ -60,27 +63,44 @@ internal static class OperationLogger
         Console.WriteLine($"Collected order numbers: {string.Join(", ", DataPoints)}");
         Console.ResetColor();
     }
-    private static readonly ConcurrentDictionary<string, int> MessageTypeCounts = new();
 
-    public static void CountByMessageType(string? messageType)
-    {
-        var key = messageType ?? "Unknown";
-        MessageTypeCounts.AddOrUpdate(key, 1, (_, count) => count + 1);
+    private static readonly ConcurrentDictionary<MessageType, int> MessageTypeCounts = new();
 
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("--- Message Type Counts ---");
-        foreach (var kvp in MessageTypeCounts.OrderBy(v => v.Value))
-        {
-            Console.WriteLine($"{kvp.Key}: {kvp.Value}");
-        }
-        Console.WriteLine("---------------------------");
-        Console.ResetColor();
-    }
 
     public static void MessageReturnedWithDelay(TargetQueue queue, int delayInSeconds)
     {
-
         Console.ForegroundColor = ConsoleColor.DarkCyan;
         Console.WriteLine($"Returning message to queue {queue.Name} with delay of {delayInSeconds} seconds");
-        Console.ResetColor();    }
+        Console.ResetColor();
+    }
+
+    public static Task CountByMessageType(MessageType messageType)
+    {
+        MessageTypeCounts.AddOrUpdate(messageType, 1, (_, count) => count + 1);
+
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        
+        var countOfMessagesForType = MessageTypeCounts.GetValueOrDefault(messageType);
+        Console.WriteLine($"{countOfMessagesForType} messages of type {messageType} so far");
+        
+        Console.ResetColor();
+
+        return Task.CompletedTask;
+    }
+
+    public static Task DisplayMessageTypeCount()
+    {
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine("--- Message Type Counts ---");
+        
+        foreach (var (messageType, count) in MessageTypeCounts.OrderBy(v => v.Value))
+        {
+            Console.WriteLine($"{messageType}: {count}");
+        }
+
+        Console.WriteLine("---------------------------");
+        Console.ResetColor();
+
+        return Task.CompletedTask;
+    }
 }
