@@ -37,11 +37,22 @@ internal static class ExecutionInitiator
         _taskCompletionSource = new TaskCompletionSource<int>();
         _loopTask = _taskCompletionSource.Task;
 
+        Console.WriteLine("Starting processor");
         await processor.StartProcessingAsync();
 
-        Console.WriteLine("Processor finished");
         await _loopTask;
 
+        Console.WriteLine("Execution finished");
+        Console.ReadLine();
+        
+        Console.WriteLine("Stoping processor");
+        await processor.StopProcessingAsync();
+        await ExecuteCallbacks(inputs);
+
+    }
+
+    private static async Task ExecuteCallbacks(ExecutionInputConfiguration inputs)
+    {
         Console.WriteLine("Executing callbacks");
         foreach (var executionStep in inputs.ExecutionSteps)
         {
@@ -50,9 +61,5 @@ internal static class ExecutionInitiator
                 await executionStep.ExecutionFinishedCallback();
             }
         }
-
-        Console.WriteLine("Execution finished");
-
-        Console.ReadLine();
     }
 }
