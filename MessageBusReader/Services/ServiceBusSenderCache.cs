@@ -1,23 +1,25 @@
 using System.Collections.Generic;
 using Azure.Messaging.ServiceBus;
+using MessageBusReader.DataTypes;
 
 namespace MessageBusReader.Services;
 
-internal class ServiceBusSenderCache(ServiceBusClient client)
+internal class ServiceBusSenderCache()
 {
-    private static readonly Dictionary<string, ServiceBusSender> Senders = new();
+    private static readonly Dictionary<string, ServiceBusSender> SendersCache = new();
 
-    internal ServiceBusSender GetSender(string queueName)
-    {
-        if (Senders.TryGetValue(queueName, out var cachedSender))
+    internal static ServiceBusSender GetSender(TargetQueue targetQueue)
+    {      
+
+        if (SendersCache.TryGetValue(targetQueue.Name.Name, out var cachedSender))
         {
             // We already have one in cache, return that
             return cachedSender;
         }
 
-        var sender = client.CreateSender(queueName);
+        var sender = ServiceBusClientProvider.GetClient().CreateSender(targetQueue.Name.Name);
 
-        Senders.Add(queueName, sender);
+        SendersCache.Add(targetQueue.Name.Name, sender);
 
         return sender;
     }

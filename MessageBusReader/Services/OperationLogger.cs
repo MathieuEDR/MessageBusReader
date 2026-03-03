@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using Azure.Messaging.ServiceBus;
-using Newtonsoft.Json;
+using MessageBusReader.DataTypes;
 
 namespace MessageBusReader.Services;
 
@@ -12,10 +12,10 @@ internal static class OperationLogger
     private static int _completeCounter;
     private static int _messageCount;
 
-    internal static void MessageReturned(string queueName)
+    internal static void MessageReturned(TargetQueue queue)
     {
         Console.ForegroundColor = ConsoleColor.DarkCyan;
-        Console.WriteLine($"Returning message to queue {queueName}");
+        Console.WriteLine($"Returning message to queue {queue.Name}");
         Console.ResetColor();
     }
 
@@ -76,4 +76,11 @@ internal static class OperationLogger
         Console.WriteLine("---------------------------");
         Console.ResetColor();
     }
+
+    public static void MessageReturnedWithDelay(TargetQueue queue, int delayInSeconds)
+    {
+
+        Console.ForegroundColor = ConsoleColor.DarkCyan;
+        Console.WriteLine($"Returning message to queue {queue.Name} with delay of {delayInSeconds} seconds");
+        Console.ResetColor();    }
 }
