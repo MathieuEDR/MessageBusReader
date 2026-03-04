@@ -53,17 +53,7 @@ internal static class OperationLogger
         Console.WriteLine(messageString);
         Console.ResetColor();
     }
-
-    private static ConcurrentBag<string?> DataPoints { get; set; } = new();
-
-    public static void CollectDataPoint(string? orderNumber)
-    {
-        DataPoints.Add(orderNumber);
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine($"Collected order numbers: {string.Join(", ", DataPoints)}");
-        Console.ResetColor();
-    }
-
+    
     private static readonly ConcurrentDictionary<MessageType, int> MessageTypeCounts = new();
 
     public static Task CountByMessageType(MessageType messageType)
@@ -107,7 +97,7 @@ internal static class MessageDataLogger
     {
         DataPoints.Add(dataPoint);
         Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine($"Collected order numbers: {string.Join(", ", DataPoints)}");
+        Console.WriteLine($"Collected datapoint: {dataPoint}");
         Console.ResetColor();
     }
 
