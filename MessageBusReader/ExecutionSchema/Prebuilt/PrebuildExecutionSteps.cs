@@ -44,19 +44,16 @@ internal static class PrebuildExecutionSteps
         };
     }
 
-    public static class Analyze
+    public static class CollectAndOutput
     {
-        internal static ConditionAction ByMessageType() => new()
+        private static readonly Logger Logger = new(nameof(CollectAndOutput));
+
+        internal static ConditionAction CountByMessageType() => new()
         {
             Condition = MessageFilter.Include.ForAll,
             Action = message => OperationLogger.CountByMessageType(ProcessMessageEventArgsExtensions.GetType(message) ?? MessageType.Unknown),
             ExecutionFinishedCallback = OperationLogger.DisplayMessageTypeCount
         };
-    }
-
-    public static class CollectAndOutput
-    {
-        private static readonly Logger Logger = new(nameof(CollectAndOutput));
 
         internal static ConditionAction DataPointFromBodyForMessageType(string dataPointPath, params string[] targetMessageTypes) => new()
         {

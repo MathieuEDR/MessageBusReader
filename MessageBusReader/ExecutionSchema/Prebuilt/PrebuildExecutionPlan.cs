@@ -19,21 +19,19 @@ internal static class PrebuildExecutionPlan
         };
     }
 
-    internal static class Analyze
-    {
-        internal static ExecutionPlan ByMessageType(QueueName queueName) => new()
-        {
-            SourceQueue = new Queue(queueName),
-            ExecutionSteps =
-            [
-                PrebuildExecutionSteps.Analyze.ByMessageType()
-            ]
-        };
-    }
 
     internal static class CollectAndOutput
     {
         private static readonly Logger Logger = new(nameof(CollectAndOutput));
+
+        internal static ExecutionPlan CountByMessageType(QueueName queueName) => new()
+        {
+            SourceQueue = new Queue(queueName),
+            ExecutionSteps =
+            [
+                PrebuildExecutionSteps.CollectAndOutput.CountByMessageType()
+            ]
+        };
 
         internal static ExecutionPlan OrderNumberFromOrderRefreshFromShopDownloadedV2(QueueName queueName) => new()
         {
