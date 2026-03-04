@@ -1,65 +1,46 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Azure.Messaging.ServiceBus;
 using MessageBusReader.Configuration;
 
 namespace MessageBusReader.Services;
 
 internal static class ExecutionInitiator
 {
-    private static TaskCompletionSource<int>? _taskCompletionSource;
-    private static Task<int>? _loopTask;
-
+    private static readonly Logger Logger = new(nameof(ExecutionInitiator));
+    private static readonly UserTermination UserTermination = new();
 
     internal static async Task Start(ExecutionInputConfiguration inputs)
     {
-        var client = ServiceBusClientProvider.GetClient();
+        var processor = new QueueProcessor(inputs);
 
-        Console.WriteLine("Building message processor");
-        var messageProcessor = new MessageProcessor(inputs);
+        await processor.Start();
 
-        var options = new ServiceBusProcessorOptions
-        {
-            AutoCompleteMessages = false,
-            MaxConcurrentCalls = 1, // ReturnToQueue code does not support concurrent calls yet.
-            ReceiveMode = ServiceBusReceiveMode.PeekLock,
-            SubQueue = inputs.SourceQueue.SubQueue
-        };
+        await UserTermination.WaitUntilUserTerminatesProgram();
 
-        Console.WriteLine("Creating processor");
-        var processor = client.CreateProcessor(inputs.SourceQueue.Name.Name, options);
+        await processor.Stop();
 
-        Console.WriteLine("Registering processor callbacks");
-        processor.ProcessMessageAsync += messageProcessor.ProcessMessagesAsync;
-        processor.ProcessErrorAsync += messageProcessor.ExceptionReceivedHandler;
+        await Dispose(processor);
 
-        _taskCompletionSource = new TaskCompletionSource<int>();
-        _loopTask = _taskCompletionSource.Task;
-
-        Console.WriteLine("Starting processor");
-        await processor.StartProcessingAsync();
-
-        Console.WriteLine($"Is Processing: {processor.IsProcessing}");
-        Console.WriteLine($"Is Closed: {processor.IsClosed}");
-        await _loopTask;
-
-        Console.WriteLine("Execution finished");
-        Console.ReadLine();
-        
-        Console.WriteLine("Stoping processor");
-        await processor.StopProcessingAsync();
         await ExecuteCallbacks(inputs);
-
     }
+
+    private static async Task Dispose(QueueProcessor processor)
+    {
+        await processor.DisposeAsync();
+        await ServiceBusClientProvider.DisposeAsync();
+    }
+
 
     private static async Task ExecuteCallbacks(ExecutionInputConfiguration inputs)
     {
-        Console.WriteLine("Executing callbacks");
+        var callbacksCount = inputs.ExecutionSteps.Count(step => step.ExecutionFinishedCallback != null);
+        Logger.Log($"There are {callbacksCount} callbacks to execute");
+
         foreach (var executionStep in inputs.ExecutionSteps)
         {
             if (executionStep.ExecutionFinishedCallback != null)
             {
+                Logger.Log("Executing callback");
                 await executionStep.ExecutionFinishedCallback();
             }
         }

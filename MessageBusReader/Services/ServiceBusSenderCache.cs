@@ -4,19 +4,22 @@ using MessageBusReader.DataTypes;
 
 namespace MessageBusReader.Services;
 
-internal class ServiceBusSenderCache()
+internal class ServiceBusSenderCache
 {
+    private static readonly Logger Logger = new(nameof(QueueProcessor));
+
     private static readonly Dictionary<string, ServiceBusSender> SendersCache = new();
 
     internal static ServiceBusSender GetSender(TargetQueue targetQueue)
-    {      
-
+    {
         if (SendersCache.TryGetValue(targetQueue.Name.Name, out var cachedSender))
         {
+            Logger.Log("Returning cached sender");
             // We already have one in cache, return that
             return cachedSender;
         }
 
+        Logger.Log("Building new sender");
         var sender = ServiceBusClientProvider.GetClient().CreateSender(targetQueue.Name.Name);
 
         SendersCache.Add(targetQueue.Name.Name, sender);

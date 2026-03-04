@@ -10,7 +10,7 @@ internal static class MessageAction
 {
     public static async Task ReturnFromDeadLetter(ProcessMessageEventArgs message, SourceQueue sourceQueue)
     {
-        OperationLogger.RecordMessageProcessing(message);
+        OperationLogger.MessageProcessingStarted(message);
 
         var clone = new ServiceBusMessage(message.Message);
 

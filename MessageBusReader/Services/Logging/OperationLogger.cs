@@ -11,7 +11,8 @@ using MessageBusReader.Extensions;
 namespace MessageBusReader.Services;
 
 internal static class OperationLogger
-{
+{    private static readonly Logger Logger = new(nameof(QueueProcessor));
+
     private static int _completeCounter;
     private static int _messageCount;
 
@@ -31,11 +32,15 @@ internal static class OperationLogger
         Console.ResetColor();
     }
 
-    internal static void RecordMessageProcessing(ProcessMessageEventArgs message)
+    internal static void MessageProcessingStarted(ProcessMessageEventArgs message)
     {
         _messageCount = Interlocked.Increment(ref _messageCount);
 
-        Console.WriteLine($"Processing {_messageCount}: {message.Message.MessageId}");
+        Logger.Log($"Started processing {_messageCount}: {message.Message.MessageId}");
+    }
+    internal static void MessageProcessingFinished(ProcessMessageEventArgs message)
+    {
+        Logger.Log($"Finished processing {_messageCount}: {message.Message.MessageId}");
     }
 
     internal static void Warning(string messageString)
