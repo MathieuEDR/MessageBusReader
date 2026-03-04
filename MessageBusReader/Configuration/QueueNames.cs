@@ -1,4 +1,6 @@
-namespace MessageBusReader.DataTypes.Queue;
+using MessageBusReader.DataTypes.Queue;
+
+namespace MessageBusReader.Configuration;
 
 internal static class QueueNames
 {
