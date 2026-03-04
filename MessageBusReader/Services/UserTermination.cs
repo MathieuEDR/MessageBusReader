@@ -13,7 +13,7 @@ internal class UserTermination
 
     private readonly TaskCompletionSource<int> _userTerminationTaskSource = new();
     private readonly CancellationTokenSource _cancellationTokenSource = new();
-    private readonly Logger _logger = new(nameof(ExecutionInitiator));
+    private readonly Logger _logger = new(nameof(UserTermination));
 
     internal async Task WaitUntilUserTerminatesProgram()
     {
