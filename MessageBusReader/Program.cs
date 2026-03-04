@@ -23,7 +23,7 @@ internal static class Program
             SourceQueue = sourceQueue,
             ExecutionSteps =
             [
-                PrebuildExecutionSteps.Analysis.AnalyzeMessagesByType()
+                PrebuildExecutionSteps.Execute.ReplayAll()
             ]
         };
         Console.WriteLine("Inputs built");

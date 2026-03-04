@@ -8,9 +8,15 @@ namespace MessageBusReader.ExecutionSchema.Schemas;
 
 internal static class PrebuildExecutionSteps
 {
-    public static class WithSideEffect
+    public static class Execute
     {
-        internal static ConditionAction ReturnMessagedOfTypeToSourceQueue(params string[] targetMessageTypes) => new()
+        internal static ConditionAction ReplayAll() => new()
+        {
+            Condition = MessageFilter.ForAll,
+            Action = message => message.ReturnMessageToSourceQueue()
+        };
+
+        internal static ConditionAction ReplayMessagesOfType(params string[] targetMessageTypes) => new()
         {
             Condition = message => MessageFilter.OfType(message, targetMessageTypes),
             Action = message => message.ReturnMessageToSourceQueue()
@@ -35,9 +41,9 @@ internal static class PrebuildExecutionSteps
         };
     }
 
-    public static class Analysis
+    public static class Analyze
     {
-        internal static ConditionAction AnalyzeMessagesByType() => new()
+        internal static ConditionAction ByMessageType() => new()
         {
             Condition = MessageFilter.ForAll,
             Action = message => OperationLogger.CountByMessageType(message.GetMessageType() ?? MessageType.Unknown),
