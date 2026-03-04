@@ -13,13 +13,13 @@ internal static class PrebuildExecutionSteps
 {
     public static class Execute
     {
-        internal static ConditionAction ReplayAll() => new()
+        internal static ConditionAction ReturnAllToSourceQueue() => new()
         {
             Condition = MessageFilter.Include.ForAll,
             Action = message => message.ReturnToSourceQueue()
         };
 
-        internal static ConditionAction ReplayMessagesOfType(params string[] targetMessageTypes) => new()
+        internal static ConditionAction ReturnMessagesOfType(params string[] targetMessageTypes) => new()
         {
             Condition = message => MessageFilter.Include.OfType(message, targetMessageTypes),
             Action = message => message.ReturnToSourceQueue()
