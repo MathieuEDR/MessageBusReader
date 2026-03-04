@@ -23,10 +23,9 @@ internal static class Program
         Logger.Log("Building Inputs");
 
         // Build inputs
-        var sourceQueue = new SourceQueue(QueueNames.Error.General, SubQueue.None);
-        var executionSteps = new ExecutionInputConfiguration
+        var executionConfiguration = new ExecutionInputConfiguration
         {
-            SourceQueue = sourceQueue,
+            SourceQueue = new SourceQueue(QueueNames.Error.General, SubQueue.None),
             ExecutionSteps =
             [
                 PrebuildExecutionSteps.Execute.ReplayAll()
@@ -35,7 +34,7 @@ internal static class Program
         
         
         // Start Execution
-        await StartProgramExecution(executionSteps);
+        await StartProgramExecution(executionConfiguration);
     }
 
 
