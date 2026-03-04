@@ -12,7 +12,7 @@ internal class QueueProcessor : IAsyncDisposable
     private readonly ServiceBusProcessor _processor;
     private static readonly Logger Logger = new(nameof(QueueProcessor));
 
-    public QueueProcessor(ExecutionInputConfiguration inputs)
+    public QueueProcessor(ExecutionPlan inputs)
     {
         var options = new ServiceBusProcessorOptions
         {

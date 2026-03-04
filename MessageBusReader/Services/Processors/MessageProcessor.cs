@@ -6,7 +6,7 @@ using MessageBusReader.Services.Logging;
 
 namespace MessageBusReader.Services.Processors;
 
-internal class MessageProcessor(ExecutionInputConfiguration inputs)
+internal class MessageProcessor(ExecutionPlan inputs)
 {
     private static readonly Logger Logger = new(nameof(QueueProcessor));
 

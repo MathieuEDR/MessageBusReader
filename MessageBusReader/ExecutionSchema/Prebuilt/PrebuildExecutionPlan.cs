@@ -2,13 +2,13 @@
 using MessageBusReader.Configuration;
 using MessageBusReader.DataTypes.Queue;
 
-namespace MessageBusReader.ExecutionSchema.Schemas;
+namespace MessageBusReader.ExecutionSchema.Prebuilt;
 
-internal static class PrebuildExecutionConfigurations
+internal static class PrebuildExecutionPlan
 {
     internal static class Execute
     {
-        internal static ExecutionInputConfiguration ReturnAllFromDeadLetter(QueueName queueName) => new()
+        internal static ExecutionPlan ReturnAllFromDeadLetter(QueueName queueName) => new()
         {
             SourceQueue = new Queue(queueName, SubQueue.DeadLetter),
             ExecutionSteps =
@@ -20,7 +20,7 @@ internal static class PrebuildExecutionConfigurations
 
     internal static class Analyze
     {
-        internal static ExecutionInputConfiguration ByMessageType(QueueName queueName) => new()
+        internal static ExecutionPlan ByMessageType(QueueName queueName) => new()
         {
             SourceQueue = new Queue(queueName),
             ExecutionSteps =

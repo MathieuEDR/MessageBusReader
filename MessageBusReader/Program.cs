@@ -1,9 +1,9 @@
 ﻿using Azure.Messaging.ServiceBus;
 using MessageBusReader.Configuration;
-using MessageBusReader.ExecutionSchema.Schemas;
 using MessageBusReader.Services;
 using System.Linq;
 using MessageBusReader.DataTypes.Queue;
+using MessageBusReader.ExecutionSchema.Prebuilt;
 using MessageBusReader.Services.Logging;
 using MessageBusReader.Services.Processors;
 using MessageBusReader.Services.ServiceBus;
@@ -20,21 +20,17 @@ internal static class Program
     static async Task Main()
     {
         Logger.Log("Starting program");
-        Logger.Log("Building Inputs");
-
-        var sourceQueueName = QueueName.Error.General;
 
         // Build inputs
-        var executionConfiguration = PrebuildExecutionConfigurations.Analyze.ByMessageType(sourceQueueName);
-
-
-
+        var sourceQueueName = QueueName.Error.General;
+        var executionConfiguration = PrebuildExecutionPlan.Analyze.ByMessageType(sourceQueueName);
+        
         // Start Execution
         await StartProgramExecution(executionConfiguration);
     }
 
 
-    private static async Task StartProgramExecution(ExecutionInputConfiguration inputs)
+    private static async Task StartProgramExecution(ExecutionPlan inputs)
     {
         var processor = new QueueProcessor(inputs);
 
@@ -49,7 +45,7 @@ internal static class Program
         await ExecuteFinishedCallbacks(inputs);
     }
 
-    private static async Task ExecuteFinishedCallbacks(ExecutionInputConfiguration inputs)
+    private static async Task ExecuteFinishedCallbacks(ExecutionPlan inputs)
     {
         var inputsExecutionSteps = inputs.ExecutionSteps;
         var callbacksCount = inputsExecutionSteps.Count(step => step.ExecutionFinishedCallback != null);

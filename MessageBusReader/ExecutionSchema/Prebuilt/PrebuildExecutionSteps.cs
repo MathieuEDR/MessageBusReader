@@ -5,7 +5,7 @@ using MessageBusReader.ExecutionSchema.Steps;
 using MessageBusReader.Extensions;
 using MessageBusReader.Services.Logging;
 
-namespace MessageBusReader.ExecutionSchema.Schemas;
+namespace MessageBusReader.ExecutionSchema.Prebuilt;
 
 internal static class PrebuildExecutionSteps
 {
