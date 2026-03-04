@@ -17,7 +17,7 @@ internal static class Program
         Console.WriteLine("Building Inputs");
 
         // Build inputs
-        var sourceQueue = new SourceQueue(ErrorQueueName.General.GetQueueName(), SubQueue.None);
+        var sourceQueue = new SourceQueue(QueueNames.Error.General, SubQueue.None);
         var executionSteps = new ExecutionInputConfiguration
         {
             SourceQueue = sourceQueue,
