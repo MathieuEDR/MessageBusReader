@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using MessageBusReader.DataTypes;
+using MessageBusReader.DataTypes.Queue;
 using MessageBusReader.Extensions;
-using MessageBusReader.Services;
+using MessageBusReader.Services.Logging;
 
 namespace MessageBusReader.ExecutionSchema.Steps;
 

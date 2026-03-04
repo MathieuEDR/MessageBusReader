@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using MessageBusReader.DataTypes;
+using MessageBusReader.DataTypes.Queue;
 using MessageBusReader.ExecutionSchema.Steps;
 
 namespace MessageBusReader.Configuration;

@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using Azure.Messaging.ServiceBus;
-using MessageBusReader.DataTypes;
+using MessageBusReader.DataTypes.Queue;
+using MessageBusReader.Services.Logging;
+using MessageBusReader.Services.Processors;
 
-namespace MessageBusReader.Services;
+namespace MessageBusReader.Services.ServiceBus;
 
 internal class ServiceBusSenderCache
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MessageBusReader.Services;
+namespace MessageBusReader.Services.Logging;
 
 internal class Logger(string? serviceName = null)
 {

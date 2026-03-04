@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using MessageBusReader.Services.Logging;
+using MessageBusReader.Services.Processors;
 
-namespace MessageBusReader.Services;
+namespace MessageBusReader.Services.ServiceBus;
 
 internal static class ServiceBusClientProvider
 {

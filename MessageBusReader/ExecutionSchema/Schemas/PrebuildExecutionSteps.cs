@@ -1,8 +1,9 @@
 ﻿using System.Threading;
 using MessageBusReader.DataTypes;
+using MessageBusReader.DataTypes.Queue;
 using MessageBusReader.ExecutionSchema.Steps;
 using MessageBusReader.Extensions;
-using MessageBusReader.Services;
+using MessageBusReader.Services.Logging;
 
 namespace MessageBusReader.ExecutionSchema.Schemas;
 

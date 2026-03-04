@@ -4,15 +4,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using MessageBusReader.DataTypes;
-using MessageBusReader.Services;
+using MessageBusReader.DataTypes.Queue;
+using MessageBusReader.Services.Logging;
+using MessageBusReader.Services.ServiceBus;
 
 namespace MessageBusReader.Extensions;
-
-public record MessageType(string Value)
-{
-    public static MessageType Unknown => new("unknown");
-    public override string ToString() => Value;
-}
 
 internal static class ProcessMessageEventArgsExtensions
 {

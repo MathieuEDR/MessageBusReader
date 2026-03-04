@@ -2,8 +2,9 @@
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using MessageBusReader.Configuration;
+using MessageBusReader.Services.Logging;
 
-namespace MessageBusReader.Services;
+namespace MessageBusReader.Services.Processors;
 
 internal class MessageProcessor(ExecutionInputConfiguration inputs)
 {

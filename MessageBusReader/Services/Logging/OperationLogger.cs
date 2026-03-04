@@ -6,9 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using MessageBusReader.DataTypes;
-using MessageBusReader.Extensions;
+using MessageBusReader.DataTypes.Queue;
+using MessageBusReader.Services.Processors;
 
-namespace MessageBusReader.Services;
+namespace MessageBusReader.Services.Logging;
 
 internal static class OperationLogger
 {    private static readonly Logger Logger = new(nameof(QueueProcessor));

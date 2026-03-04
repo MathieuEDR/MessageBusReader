@@ -1,4 +1,4 @@
-﻿namespace MessageBusReader.DataTypes;
+﻿namespace MessageBusReader.DataTypes.Queue;
 
 internal record QueueName(string Name)
 {
