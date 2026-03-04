@@ -6,6 +6,6 @@ namespace MessageBusReader.Configuration;
 
 internal class ExecutionInputConfiguration
 {
-    internal required SourceQueue SourceQueue { get; init; }
+    internal required Queue SourceQueue { get; init; }
     public required List<ConditionAction> ExecutionSteps { get; init; } = new();
 }

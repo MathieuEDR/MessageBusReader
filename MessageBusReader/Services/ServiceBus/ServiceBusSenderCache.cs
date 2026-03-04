@@ -12,7 +12,7 @@ internal class ServiceBusSenderCache
 
     private static readonly Dictionary<string, ServiceBusSender> SendersCache = new();
 
-    internal static ServiceBusSender GetSender(TargetQueue targetQueue)
+    internal static ServiceBusSender GetSender(Queue targetQueue)
     {
         if (SendersCache.TryGetValue(targetQueue.Name.Name, out var cachedSender))
         {
