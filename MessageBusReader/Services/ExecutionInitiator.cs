@@ -40,6 +40,8 @@ internal static class ExecutionInitiator
         Console.WriteLine("Starting processor");
         await processor.StartProcessingAsync();
 
+        Console.WriteLine($"Is Processing: {processor.IsProcessing}");
+        Console.WriteLine($"Is Closed: {processor.IsClosed}");
         await _loopTask;
 
         Console.WriteLine("Execution finished");
