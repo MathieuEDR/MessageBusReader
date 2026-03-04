@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace MessageBusReader.Services;
+namespace MessageBusReader.Services.Logging;
 
 internal static class LogFilePathProvider
 {

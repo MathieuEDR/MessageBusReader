@@ -1,13 +1,11 @@
-using MessageBusReader.DataTypes;
+using System.Collections.Generic;
+using MessageBusReader.DataTypes.Queue;
+using MessageBusReader.ExecutionSchema.Steps;
 
 namespace MessageBusReader.Configuration;
 
 internal class ExecutionInputConfiguration
 {
-    internal required ErrorQueue TargetErrorQueue { get; init; }
-    internal required string[] MessageTypesToDeleteWithoutAction { get; set; }
-    internal required string[] MessageTypesToReplay { get; set; }
-    internal required string[] MessagesToCollectDataFrom { get; set; }
-    internal required bool DeadLetterEverythingElse { get; set; }
-    public bool CollectCountByMessageType { get; set; }
+    internal required SourceQueue SourceQueue { get; init; }
+    public required List<ConditionAction> ExecutionSteps { get; init; } = new();
 }
