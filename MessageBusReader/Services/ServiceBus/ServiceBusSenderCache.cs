@@ -16,7 +16,6 @@ internal class ServiceBusSenderCache
     {
         if (SendersCache.TryGetValue(targetQueue.Name.Name, out var cachedSender))
         {
-            Logger.Log("Returning cached sender");
             // We already have one in cache, return that
             return cachedSender;
         }

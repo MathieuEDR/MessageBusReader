@@ -14,13 +14,13 @@ internal static class PrebuildExecutionSteps
         internal static ConditionAction ReplayAll() => new()
         {
             Condition = MessageFilter.ForAll,
-            Action = message => message.ReturnMessageToSourceQueue()
+            Action = message => message.ReturnToSourceQueue()
         };
 
         internal static ConditionAction ReplayMessagesOfType(params string[] targetMessageTypes) => new()
         {
             Condition = message => MessageFilter.OfType(message, targetMessageTypes),
-            Action = message => message.ReturnMessageToSourceQueue()
+            Action = message => message.ReturnToSourceQueue()
         };
 
         internal static ConditionAction DeleteMessagesOfType(params string[] targetMessageTypes) => new()
@@ -35,10 +35,10 @@ internal static class PrebuildExecutionSteps
             Action = message => message.CompleteMessageAsync(message.Message, CancellationToken.None),
         };
 
-        internal static ConditionAction ReturnAllFromDeadLetterQueue(Queue sourceQueue) => new()
+        internal static ConditionAction SendAllToQueue(Queue sourceQueue) => new()
         {
             Condition = MessageFilter.ForAll,
-            Action = message => MessageAction.ReturnFromDeadLetter(message, sourceQueue)
+            Action = message => MessageAction.SendToQueue(message, sourceQueue)
         };
     }
 
@@ -47,7 +47,7 @@ internal static class PrebuildExecutionSteps
         internal static ConditionAction ByMessageType() => new()
         {
             Condition = MessageFilter.ForAll,
-            Action = message => OperationLogger.CountByMessageType(message.GetMessageType() ?? MessageType.Unknown),
+            Action = message => OperationLogger.CountByMessageType(ProcessMessageEventArgsExtensions.GetType(message) ?? MessageType.Unknown),
             ExecutionFinishedCallback = OperationLogger.DisplayMessageTypeCount
         };
     }

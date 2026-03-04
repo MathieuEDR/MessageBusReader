@@ -12,7 +12,9 @@ namespace MessageBusReader.Extensions;
 
 internal static class ProcessMessageEventArgsExtensions
 {
-    internal static MessageType? GetMessageType(this ProcessMessageEventArgs messageEvent)
+    private static readonly Logger Logger = new();
+
+    internal static MessageType? GetType(this ProcessMessageEventArgs messageEvent)
     {
         if (messageEvent.Message.ApplicationProperties.TryGetValue("rbs2-msg-type", out var rawValue))
         {
@@ -27,7 +29,7 @@ internal static class ProcessMessageEventArgsExtensions
 
     internal static bool IsOfType(this ProcessMessageEventArgs messageEvent, params string[] targetMessageTypes)
     {
-        if (messageEvent.GetMessageType() is { } actualMessageType)
+        if (GetType(messageEvent) is { } actualMessageType)
         {
             return targetMessageTypes.Any(targetMessageType => actualMessageType.Value == targetMessageType);
         }
@@ -35,7 +37,7 @@ internal static class ProcessMessageEventArgsExtensions
         return false;
     }
 
-    internal static Queue? GetMessageSourceQueue(this ProcessMessageEventArgs messageEvent)
+    internal static Queue? GetSourceQueue(this ProcessMessageEventArgs messageEvent)
     {
         if (!messageEvent.Message.ApplicationProperties.TryGetValue("rbs2-source-queue", out var rawValue))
         {
@@ -51,9 +53,9 @@ internal static class ProcessMessageEventArgsExtensions
         return null;
     }
 
-    internal static async Task ReturnMessageToSourceQueue(this ProcessMessageEventArgs messageEvent, int delayInSeconds = 0)
+    internal static async Task ReturnToSourceQueue(this ProcessMessageEventArgs messageEvent, int delayInSeconds = 0)
     {
-        var source = messageEvent.GetMessageSourceQueue();
+        var source = messageEvent.GetSourceQueue();
 
         if (source == null)
         {
@@ -63,28 +65,28 @@ internal static class ProcessMessageEventArgsExtensions
 
         var copy = new ServiceBusMessage(messageEvent.Message);
 
-        await ReturnMessageToQueue(copy, source, delayInSeconds);
+        await SendToQueue(copy, source, delayInSeconds);
 
-        await CompleteMessage(messageEvent);
+        await Delete(messageEvent);
     }
 
-    internal static async Task ReturnMessageToQueue(this ServiceBusMessage message, Queue queueName, int delayInSeconds = 0)
+    internal static async Task SendToQueue(this ServiceBusMessage message, Queue queue, int delayInSeconds = 0)
     {
-        var sender = ServiceBusSenderCache.GetSender(queueName);
+        var sender = ServiceBusSenderCache.GetSender(queue);
 
         if (delayInSeconds > 0)
         {
             await sender.ScheduleMessageAsync(message, DateTimeOffset.UtcNow.AddSeconds(delayInSeconds));
-            OperationLogger.MessageReturnedWithDelay(queueName, delayInSeconds);
+            Logger.LogMessageSentWithDelay(message, queue, delayInSeconds);
         }
         else
         {
             await sender.SendMessageAsync(message);
-            OperationLogger.MessageReturned(queueName);
+            Logger.LogMessageSent(message, queue);
         }
     }
 
-    internal static async Task CompleteMessage(this ProcessMessageEventArgs messageEvent)
+    internal static async Task Delete(this ProcessMessageEventArgs messageEvent)
     {
         await messageEvent.CompleteMessageAsync(messageEvent.Message);
 

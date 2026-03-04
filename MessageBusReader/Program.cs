@@ -23,16 +23,19 @@ internal static class Program
         Logger.Log("Building Inputs");
 
         // Build inputs
-        var executionConfiguration = new ExecutionInputConfiguration
-        {
-            SourceQueue = new Queue(QueueNames.Error.General),
-            ExecutionSteps =
-            [
-                PrebuildExecutionSteps.Execute.ReplayAll()
-            ]
-        };
+        // var executionConfiguration = PrebuildConfigurations.Execute.ReturnAllFromDeadLetter(QueueName.Error.General);
+        var executionConfiguration = PrebuildConfigurations.Analyze(QueueName.Error.General);
         
-        
+        // var executionConfiguration = new ExecutionInputConfiguration
+        // {
+        //     SourceQueue = new Queue(QueueName.Error.General),
+        //     ExecutionSteps =
+        //     [
+        //         PrebuildExecutionSteps.Analyze.ByMessageType()
+        //     ]
+        // };
+
+
         // Start Execution
         await StartProgramExecution(executionConfiguration);
     }

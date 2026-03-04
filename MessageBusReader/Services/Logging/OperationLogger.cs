@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using MessageBusReader.DataTypes;
-using MessageBusReader.DataTypes.Queue;
 using MessageBusReader.Services.Processors;
 
 namespace MessageBusReader.Services.Logging;
@@ -16,13 +15,6 @@ internal static class OperationLogger
 
     private static int _completeCounter;
     private static int _messageCount;
-
-    internal static void MessageReturned(Queue queue)
-    {
-        Console.ForegroundColor = ConsoleColor.DarkCyan;
-        Console.WriteLine($"Returning message to queue {queue.Name}");
-        Console.ResetColor();
-    }
 
     internal static void MessageCompleted()
     {
@@ -73,12 +65,6 @@ internal static class OperationLogger
     private static readonly ConcurrentDictionary<MessageType, int> MessageTypeCounts = new();
 
 
-    public static void MessageReturnedWithDelay(Queue queue, int delayInSeconds)
-    {
-        Console.ForegroundColor = ConsoleColor.DarkCyan;
-        Console.WriteLine($"Returning message to queue {queue.Name} with delay of {delayInSeconds} seconds");
-        Console.ResetColor();
-    }
 
     public static Task CountByMessageType(MessageType messageType)
     {
