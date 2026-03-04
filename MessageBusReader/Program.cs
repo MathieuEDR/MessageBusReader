@@ -1,5 +1,4 @@
-﻿using Azure.Messaging.ServiceBus;
-using MessageBusReader.Configuration;
+﻿using MessageBusReader.Configuration;
 using MessageBusReader.Services;
 using System.Linq;
 using MessageBusReader.DataTypes.Queue;
@@ -23,7 +22,7 @@ internal static class Program
 
         // Build inputs
         var sourceQueueName = QueueName.Error.General;
-        var executionConfiguration = PrebuildExecutionPlan.Analyze.ByMessageType(sourceQueueName);
+        var executionConfiguration = PrebuildExecutionPlan.CollectAndOutput.OrderNumberFromOrderRefreshFromShopDownloadedV2(sourceQueueName);
         
         // Start Execution
         await StartProgramExecution(executionConfiguration);

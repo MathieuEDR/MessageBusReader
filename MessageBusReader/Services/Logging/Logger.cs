@@ -46,10 +46,34 @@ internal class Logger(string? serviceName = null)
 
     public void LogMessageSentWithDelay(ServiceBusMessage message, Queue queue, int delayInSeconds)
     {
-
         AddServiceNameIfPresent();
 
         Console.ForegroundColor = ConsoleColor.DarkCyan;
         Console.WriteLine($"Sent message {message.MessageId} to queue {queue} with delay of {delayInSeconds} seconds");
+        Console.ResetColor();
+    }
+
+    public void LogInformation(string message)
+    {
+        AddServiceNameIfPresent();
+
+        Console.ForegroundColor = ConsoleColor.Cyan;
+
+        Console.WriteLine(message);
+        Console.ResetColor();
+    }
+
+    public void DataPointCollected(ProcessMessageEventArgs message, string dataPoint)
+    {
+        LogInformation($"Collected datapoint {dataPoint} from message {message.Message.MessageId}");
+    }
+
+    public void LogWarning(string message)
+    {
+        AddServiceNameIfPresent();
+
+        Console.ForegroundColor = ConsoleColor.Yellow;
+
+        Console.WriteLine(message);
         Console.ResetColor();    }
 }
