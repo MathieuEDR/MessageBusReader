@@ -4,7 +4,7 @@ using MessageBusReader.DataTypes.Queue;
 
 namespace MessageBusReader.ExecutionSchema.Schemas;
 
-internal static class PrebuildConfigurations
+internal static class PrebuildExecutionConfigurations
 {
     internal static class Execute
     {

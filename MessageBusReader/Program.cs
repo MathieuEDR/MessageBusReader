@@ -26,7 +26,7 @@ internal static class Program
 
         // Build inputs
         // var executionConfiguration = PrebuildConfigurations.Execute.ReturnAllFromDeadLetter(sourceQueueName);
-        var executionConfiguration = PrebuildConfigurations.Analyze.ByMessageType(sourceQueueName);
+        var executionConfiguration = PrebuildExecutionConfigurations.Analyze.ByMessageType(sourceQueueName);
         
         // var executionConfiguration = new ExecutionInputConfiguration
         // {
