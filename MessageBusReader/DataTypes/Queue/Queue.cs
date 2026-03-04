@@ -2,6 +2,6 @@ using Azure.Messaging.ServiceBus;
 
 namespace MessageBusReader.DataTypes.Queue;
 
-internal record SourceQueue(QueueName Name, SubQueue SubQueue)
+internal record Queue(QueueName Name, SubQueue SubQueue = SubQueue.None)
 {
 }

@@ -25,7 +25,7 @@ internal static class Program
         // Build inputs
         var executionConfiguration = new ExecutionInputConfiguration
         {
-            SourceQueue = new SourceQueue(QueueNames.Error.General, SubQueue.None),
+            SourceQueue = new Queue(QueueNames.Error.General, SubQueue.None),
             ExecutionSteps =
             [
                 PrebuildExecutionSteps.Execute.ReplayAll()

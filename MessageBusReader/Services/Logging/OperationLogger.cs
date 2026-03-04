@@ -17,7 +17,7 @@ internal static class OperationLogger
     private static int _completeCounter;
     private static int _messageCount;
 
-    internal static void MessageReturned(TargetQueue queue)
+    internal static void MessageReturned(Queue queue)
     {
         Console.ForegroundColor = ConsoleColor.DarkCyan;
         Console.WriteLine($"Returning message to queue {queue.Name}");
@@ -73,7 +73,7 @@ internal static class OperationLogger
     private static readonly ConcurrentDictionary<MessageType, int> MessageTypeCounts = new();
 
 
-    public static void MessageReturnedWithDelay(TargetQueue queue, int delayInSeconds)
+    public static void MessageReturnedWithDelay(Queue queue, int delayInSeconds)
     {
         Console.ForegroundColor = ConsoleColor.DarkCyan;
         Console.WriteLine($"Returning message to queue {queue.Name} with delay of {delayInSeconds} seconds");

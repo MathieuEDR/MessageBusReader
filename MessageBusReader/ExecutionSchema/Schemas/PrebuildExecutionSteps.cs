@@ -35,7 +35,7 @@ internal static class PrebuildExecutionSteps
             Action = message => message.CompleteMessageAsync(message.Message, CancellationToken.None),
         };
 
-        internal static ConditionAction ReturnAllFromDeadLetterQueue(SourceQueue sourceQueue) => new()
+        internal static ConditionAction ReturnAllFromDeadLetterQueue(Queue sourceQueue) => new()
         {
             Condition = MessageFilter.ForAll,
             Action = message => MessageAction.ReturnFromDeadLetter(message, sourceQueue)

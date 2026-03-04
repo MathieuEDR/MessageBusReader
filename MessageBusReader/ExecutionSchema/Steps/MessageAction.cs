@@ -8,13 +8,13 @@ namespace MessageBusReader.ExecutionSchema.Steps;
 
 internal static class MessageAction
 {
-    public static async Task ReturnFromDeadLetter(ProcessMessageEventArgs message, SourceQueue sourceQueue)
+    public static async Task ReturnFromDeadLetter(ProcessMessageEventArgs message, Queue sourceQueue)
     {
         OperationLogger.MessageProcessingStarted(message);
 
         var clone = new ServiceBusMessage(message.Message);
 
-        await clone.ReturnMessageToQueue(new TargetQueue(sourceQueue.Name));
+        await clone.ReturnMessageToQueue(new Queue(sourceQueue.Name));
         await message.CompleteMessage();
     }
 }

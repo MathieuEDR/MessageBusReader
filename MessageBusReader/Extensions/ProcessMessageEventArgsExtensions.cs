@@ -35,7 +35,7 @@ internal static class ProcessMessageEventArgsExtensions
         return false;
     }
 
-    internal static TargetQueue? GetMessageSourceQueue(this ProcessMessageEventArgs messageEvent)
+    internal static Queue? GetMessageSourceQueue(this ProcessMessageEventArgs messageEvent)
     {
         if (!messageEvent.Message.ApplicationProperties.TryGetValue("rbs2-source-queue", out var rawValue))
         {
@@ -45,7 +45,7 @@ internal static class ProcessMessageEventArgsExtensions
         if (rawValue?.ToString() is { } sanitizedValue)
         {
             var queueName = new QueueName(sanitizedValue);
-            return new TargetQueue(queueName);
+            return new Queue(queueName);
         }
 
         return null;
@@ -68,7 +68,7 @@ internal static class ProcessMessageEventArgsExtensions
         await CompleteMessage(messageEvent);
     }
 
-    internal static async Task ReturnMessageToQueue(this ServiceBusMessage message, TargetQueue queueName, int delayInSeconds = 0)
+    internal static async Task ReturnMessageToQueue(this ServiceBusMessage message, Queue queueName, int delayInSeconds = 0)
     {
         var sender = ServiceBusSenderCache.GetSender(queueName);
 
