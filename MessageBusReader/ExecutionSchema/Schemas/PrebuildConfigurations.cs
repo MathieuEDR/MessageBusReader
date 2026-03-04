@@ -18,8 +18,9 @@ internal static class PrebuildConfigurations
         };
     }
 
-        
-        internal static ExecutionInputConfiguration Analyze(QueueName queueName) => new()
+    internal static class Analyze
+    {
+        internal static ExecutionInputConfiguration ByMessageType(QueueName queueName) => new()
         {
             SourceQueue = new Queue(queueName),
             ExecutionSteps =
@@ -27,5 +28,5 @@ internal static class PrebuildConfigurations
                 PrebuildExecutionSteps.Analyze.ByMessageType()
             ]
         };
-    
+    }
 }

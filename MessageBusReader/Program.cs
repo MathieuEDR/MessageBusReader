@@ -22,13 +22,15 @@ internal static class Program
         Logger.Log("Starting program");
         Logger.Log("Building Inputs");
 
+        var sourceQueueName = QueueName.Error.General;
+
         // Build inputs
-        // var executionConfiguration = PrebuildConfigurations.Execute.ReturnAllFromDeadLetter(QueueName.Error.General);
-        var executionConfiguration = PrebuildConfigurations.Analyze(QueueName.Error.General);
+        // var executionConfiguration = PrebuildConfigurations.Execute.ReturnAllFromDeadLetter(sourceQueueName);
+        var executionConfiguration = PrebuildConfigurations.Analyze.ByMessageType(sourceQueueName);
         
         // var executionConfiguration = new ExecutionInputConfiguration
         // {
-        //     SourceQueue = new Queue(QueueName.Error.General),
+        //     SourceQueue = new Queue(sourceQueueName),
         //     ExecutionSteps =
         //     [
         //         PrebuildExecutionSteps.Analyze.ByMessageType()
