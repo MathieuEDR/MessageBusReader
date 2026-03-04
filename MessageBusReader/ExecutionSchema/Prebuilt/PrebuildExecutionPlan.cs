@@ -40,7 +40,9 @@ internal static class PrebuildExecutionPlan
             SourceQueue = new Queue(queueName),
             ExecutionSteps =
             [
-                PrebuildExecutionSteps.CollectAndOutput.DataPointFromBodyForMessageType("$.Order.OrderNumber", "Edrington.Contracts.Orders.Events.OrderRefreshFromShopDownloadedV2, Edrington.Contracts.Orders"),
+                PrebuildExecutionSteps.CollectAndOutput.DataPointFromBodyForMessageType(
+                    "$.Order.OrderNumber",
+                    "Edrington.Contracts.Orders.Events.OrderRefreshFromShopDownloadedV2, Edrington.Contracts.Orders"),
             ]
         };
     }
