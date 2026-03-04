@@ -11,7 +11,8 @@ using MessageBusReader.Services.Processors;
 namespace MessageBusReader.Services.Logging;
 
 internal static class OperationLogger
-{    private static readonly Logger Logger = new(nameof(QueueProcessor));
+{
+    private static readonly Logger Logger = new(nameof(QueueProcessor));
 
     private static int _completeCounter;
     private static int _messageCount;
@@ -20,7 +21,7 @@ internal static class OperationLogger
     {
         _completeCounter++;
 
-        Console.ForegroundColor = ConsoleColor.Green;
+        Console.ForegroundColor = ConsoleColor.DarkGreen;
         Console.WriteLine($"{_completeCounter} messages completed");
         Console.ResetColor();
     }
@@ -31,6 +32,7 @@ internal static class OperationLogger
 
         Logger.Log($"Started processing {_messageCount}: {message.Message.MessageId}");
     }
+
     internal static void MessageProcessingFinished(ProcessMessageEventArgs message)
     {
         Logger.Log($"Finished processing {_messageCount}: {message.Message.MessageId}");
@@ -64,17 +66,15 @@ internal static class OperationLogger
 
     private static readonly ConcurrentDictionary<MessageType, int> MessageTypeCounts = new();
 
-
-
     public static Task CountByMessageType(MessageType messageType)
     {
         MessageTypeCounts.AddOrUpdate(messageType, 1, (_, count) => count + 1);
 
         Console.ForegroundColor = ConsoleColor.Cyan;
-        
+
         var countOfMessagesForType = MessageTypeCounts.GetValueOrDefault(messageType);
         Console.WriteLine($"{countOfMessagesForType} messages of type {messageType} so far");
-        
+
         Console.ResetColor();
 
         return Task.CompletedTask;
@@ -84,10 +84,41 @@ internal static class OperationLogger
     {
         Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine("--- Message Type Counts ---");
-        
+
         foreach (var (messageType, count) in MessageTypeCounts.OrderBy(v => v.Value))
         {
             Console.WriteLine($"{messageType}: {count}");
+        }
+
+        Console.WriteLine("---------------------------");
+        Console.ResetColor();
+
+        return Task.CompletedTask;
+    }
+}
+
+internal static class MessageDataLogger
+{
+    private static readonly Logger Logger = new(nameof(MessageDataLogger));
+
+    private static ConcurrentBag<object?> DataPoints { get; set; } = new();
+
+    public static void CollectDataPoint(object? dataPoint)
+    {
+        DataPoints.Add(dataPoint);
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine($"Collected order numbers: {string.Join(", ", DataPoints)}");
+        Console.ResetColor();
+    }
+
+    public static Task OutputCollectedData()
+    {
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine("--- Data Points ---");
+
+        foreach (var dataPoint in DataPoints.Distinct())
+        {
+            Console.WriteLine(dataPoint);
         }
 
         Console.WriteLine("---------------------------");

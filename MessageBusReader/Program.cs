@@ -1,5 +1,4 @@
-﻿using Azure.Messaging.ServiceBus;
-using MessageBusReader.Configuration;
+﻿using MessageBusReader.Configuration;
 using MessageBusReader.Services;
 using System.Linq;
 using MessageBusReader.DataTypes.Queue;
